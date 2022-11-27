@@ -661,12 +661,20 @@ def batch_detect(net: nn.Module, images: torch.Tensor, threshold: float = 0.5):
             scores.append(score)
             image_ids.append(image_id)
 
-    return {
-        'rects': torch.stack(rects, dim=0).to(img.device),
-        'points': torch.stack(points, dim=0).to(img.device),
-        'scores': torch.tensor(scores).to(img.device),
-        'image_ids': torch.tensor(image_ids).to(img.device)
-    }
+    if rects:
+        return {
+            'rects': torch.stack(rects, dim=0).to(img.device),
+            'points': torch.stack(points, dim=0).to(img.device),
+            'scores': torch.tensor(scores).to(img.device),
+            'image_ids': torch.tensor(image_ids).to(img.device)
+        }
+    else:
+        return {
+            'rects': [],
+            'points': [],
+            'scores': [],
+            'image_ids': [],
+        }
 
 
 class RetinaFaceDetector(FaceDetector):
